@@ -20,75 +20,59 @@ public class SignUpRequestHandler extends Thread{
         this.socket = socket;
     }
 
+    private String stringMatchWith(String str, String regex){
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(str);
+
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null;
+    }
+
+    private String matchWith(String regex){
+        return stringMatchWith(request, regex);
+    }
+
+    private void sendMessage(String message){
+        try {
+            DataOutputStream dos = (DataOutputStream) socket.getOutputStream();
+            dos.write(message.getBytes("UTF-8"));
+            dos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void run() {
-        String userName = null;
-        String requestCommand = null;
-        String jsonString = null;
-
-        String regex = "@(.*?)/";
-
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(request);
-
-        if (matcher.find()) {
-            userName = matcher.group(1);
-        }
-
-        regex = "/(.*?)#";
-
-        pattern = Pattern.compile(regex);
-        matcher = pattern.matcher(request);
-
-        if(matcher.find()) {
-            requestCommand = matcher.group(1);
-        }
-
-        regex = "#(.*)$";
-
-        pattern = Pattern.compile(regex);
-        matcher = pattern.matcher(request);
-
-        if(matcher.find()) {
-            jsonString = matcher.group(1);
-        }
+        String userName = matchWith("@(.*?)/");
+        String requestCommand = matchWith("/(.*?)#");
+        String jsonString = matchWith("#(.*)$");
 
         try (BufferedReader br = new BufferedReader(new FileReader("./DataBase/UserPass.txt"))) {
             String line;
             String UN;
-            boolean flag = false;
-            regex = "^(.*?) :";
+            boolean signedUpBefore = false;
             while ((line = br.readLine()) != null) {
-                pattern = Pattern.compile(regex);
-                matcher = pattern.matcher(line);
-                UN = matcher.group(1);
+                UN=stringMatchWith(line, "^(.*?) :");
                 if(userName.equals(UN)) {
-                    DataOutputStream dos = (DataOutputStream) socket.getOutputStream();
-                    String message = "DuplicateUsername";
-                    byte[] messageBytes = message.getBytes("UTF-8");
-                    dos.write(messageBytes);
-                    dos.close();
-                    flag = true;
+                    sendMessage("DuplicateUsername");
+                    signedUpBefore = true;
                     break;
                 }
             }
-            if(flag == false) {
+            if(!signedUpBefore) {
                 FileWriter fw = new FileWriter( "./DataBase/Users.txt",true);
                 fw.write(jsonString);
                 fw.write('\n');
-                regex = "\"\\\"password\\\":\\\"(.*?)\\\"\"";
-                pattern = Pattern.compile(regex);
-                matcher = pattern.matcher(jsonString);
                 MessageDigest digest = MessageDigest.getInstance("SHA-256");
-                byte[] hash = digest.digest(matcher.group(1).getBytes(StandardCharsets.UTF_8));
+                byte[] hash = digest.digest(stringMatchWith(jsonString, "\"\\\"password\\\":\\\"(.*?)\\\"\"").getBytes(StandardCharsets.UTF_8));
                 String passwordHash = new String(hash, StandardCharsets.UTF_8);
                 fw = new FileWriter("./DataBase/UserPass.txt" , true);
                 fw.write(userName + " : " + passwordHash + "\n");
                 DataOutputStream dos = (DataOutputStream) socket.getOutputStream();
-                byte[] messageBytes = "Account Created Successfully".getBytes("UTF-8");
-                dos.write(messageBytes);
-                dos.close();
+                sendMessage("Account Created Successfully");
             }
         } catch (IOException e) {
             System.out.println("Reading file interrupted");
