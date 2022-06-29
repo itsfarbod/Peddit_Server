@@ -1,3 +1,4 @@
+import RequestHandlers.ForumsPostsRequest;
 import RequestHandlers.LoginRequestHandler;
 import RequestHandlers.SavedPostsRequestHandler;
 import RequestHandlers.SignUpRequestHandler;
@@ -82,6 +83,10 @@ public class MainRequestHandler extends Thread{
                 break;
             case "SavedPosts" :
                 new SavedPostsRequestHandler(request , socket).start();
+                break;
+            case "ForumsPosts":
+                new ForumsPostsRequest(request , socket).start();
+                break;
         }
     }
 }
