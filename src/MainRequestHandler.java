@@ -1,7 +1,4 @@
-import RequestHandlers.ForumsPostsRequest;
-import RequestHandlers.LoginRequestHandler;
-import RequestHandlers.SavedPostsRequestHandler;
-import RequestHandlers.SignUpRequestHandler;
+import RequestHandlers.*;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -87,6 +84,8 @@ public class MainRequestHandler extends Thread{
             case "ForumsPosts":
                 new ForumsPostsRequest(request , socket).start();
                 break;
+            case "FeedPagePosts" :
+                new FeedPagePostsRequestHandler(request , socket).start();
         }
     }
 }
