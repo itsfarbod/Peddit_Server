@@ -20,28 +20,35 @@ public class LoginRequestHandler extends Thread{
         this.socket = socket;
     }
 
-    @Override
-    public void run() {
-        String userName = null;
-        String password = null;
 
-        String regex = "@(.*?)/";
-
+    private String stringMatchWith(String str, String regex){
         Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(request);
+        Matcher matcher = pattern.matcher(str);
 
         if (matcher.find()) {
-            userName = matcher.group(1);
+            return matcher.group(1);
         }
+        return null;
+    }
 
-        regex = "#(.*)\"";
+    private String matchWith(String regex){
+        return stringMatchWith(request, regex);
+    }
 
-        pattern = Pattern.compile(regex);
-        matcher = pattern.matcher(request);
-
-        if(matcher.find()) {
-            password = matcher.group(1);
+    private void sendMessage(String message){
+        try {
+            DataOutputStream dos = (DataOutputStream) socket.getOutputStream();
+            dos.write(message.getBytes("UTF-8"));
+            dos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
+
+    @Override
+    public void run() {
+        String userName = matchWith("@(.*?)/");
+        String password = matchWith("#(.*)\"");
 
         MessageDigest digest = null;
         try {
@@ -54,35 +61,25 @@ public class LoginRequestHandler extends Thread{
 
         try (BufferedReader br = new BufferedReader(new FileReader("./DataBase/UserPass.txt"))) {
             String line;
-            String passwrodHashesTemp = null;
-            regex = ": (.*?)$";
-            boolean flag = false;
+            boolean userFound = false;
             while ((line = br.readLine()) != null) {
-                pattern = Pattern.compile(regex);
-                matcher = pattern.matcher(line);
-                passwrodHashesTemp = matcher.group(1);
+                String passwrodHashesTemp = stringMatchWith(line, ": (.*?)$");
                 if (passwordHash.equals(passwrodHashesTemp)) {
-                    String userNameTemp = null;
-                    regex = "\"\\\"userName\\\":\\\"(.*?)\\\"\"";
                     try(BufferedReader nbr = new BufferedReader(new FileReader("./DataBase/Users.txt"))) {
                         while ((line = br.readLine()) != null) {
-                            pattern = Pattern.compile(regex);
-                            matcher = pattern.matcher(line);
-                            userNameTemp = matcher.group(1);
+                            String userNameTemp=stringMatchWith(line, "\"\\\"userName\\\":\\\"(.*?)\\\"\"");
                             if(userNameTemp.equals(userName)){
-                                DataOutputStream dos = (DataOutputStream) socket.getOutputStream();
-                                dos.write(line.getBytes("UTF-8"));
+                                sendMessage(line);
                                 break;
                             }
                         }
                     }catch (IOException e) {}
-                    flag = true;
+                    userFound = true;
                     break;
                 }
             }
-            if(flag == false) {
-                DataOutputStream dos = (DataOutputStream) socket.getOutputStream();
-                dos.write("User did not found".getBytes("UTF-8"));
+            if(userFound == false) {
+                sendMessage("User did not found");
             }
         }catch (IOException e){}
     }

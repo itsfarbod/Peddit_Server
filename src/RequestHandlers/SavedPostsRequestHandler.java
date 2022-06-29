@@ -17,43 +17,51 @@ public class SavedPostsRequestHandler extends Thread{
         this.socket = socket;
     }
 
-    @Override
-    public void run() {
-        String userName = null;
-
-        String regex = "@(.*?)/";
-
+    private String stringMatchWith(String str, String regex){
         Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(request);
+        Matcher matcher = pattern.matcher(str);
 
         if (matcher.find()) {
-            userName = matcher.group(1);
+            return matcher.group(1);
         }
+        return null;
+    }
+
+    private String matchWith(String regex){
+        return stringMatchWith(request, regex);
+    }
+
+    private void sendMessage(String message){
+        try {
+            DataOutputStream dos = (DataOutputStream) socket.getOutputStream();
+            dos.write(message.getBytes("UTF-8"));
+            dos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void run() {
+        String userName = matchWith("@(.*?)/");
 
         try (BufferedReader br = new BufferedReader(new FileReader("./DataBase/Users.txt"))) {
             String line;
             String UN;
-            boolean flag = false;
-            regex = "\"\\\"userName\\\":\\\"(.*?)\\\"\"";
+            boolean userFound = false;
             while ((line = br.readLine()) != null) {
-                pattern = Pattern.compile(regex);
-                matcher = pattern.matcher(line);
-                UN = matcher.group(1);
+                UN=stringMatchWith(line, "\"\\\"userName\\\":\\\"(.*?)\\\"\"");
                 if(userName.equals(UN)) {
                     DataOutputStream dos = (DataOutputStream) socket.getOutputStream();
                     byte[] messageBytes = line.getBytes("UTF-8");
                     dos.write(messageBytes);
                     dos.close();
-                    flag = true;
+                    userFound = true;
                     break;
                 }
             }
-            if(flag == false) {
-                DataOutputStream dos = (DataOutputStream) socket.getOutputStream();
-                String message = "UserDidNotfound";
-                byte[] messageBytes = message.getBytes("UTF-8");
-                dos.write(messageBytes);
-                dos.close();
+            if(!userFound) {
+                sendMessage("\"UserDidNotfound\"");
             }
         }catch (Exception e) {
             System.err.println(e.getMessage());

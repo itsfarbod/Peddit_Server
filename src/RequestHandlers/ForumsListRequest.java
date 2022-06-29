@@ -8,15 +8,15 @@ import java.net.Socket;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ForumsPostsRequest extends Thread{
-
+public class ForumsListRequest extends Thread{
     String request;
     Socket socket;
 
-    public ForumsPostsRequest(String request, Socket socket) {
+    public ForumsListRequest(String request, Socket socket) {
         this.request = request;
         this.socket = socket;
     }
+
 
     private String stringMatchWith(String str, String regex){
         Pattern pattern = Pattern.compile(regex);
@@ -32,6 +32,7 @@ public class ForumsPostsRequest extends Thread{
         return stringMatchWith(request, regex);
     }
 
+
     private void sendMessage(String message){
         try {
             DataOutputStream dos = (DataOutputStream) socket.getOutputStream();
@@ -42,24 +43,27 @@ public class ForumsPostsRequest extends Thread{
         }
     }
 
+
+
     @Override
     public void run() {
-        String forumName = matchWith("#(.*)$");
+        String userName=matchWith("@(.*?)/");
+        String requestCommand = matchWith("#(.*)$");
 
-        try (BufferedReader br = new BufferedReader(new FileReader("./DataBase/Forums.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("./DataBase/Users.txt"))) {
             String line;
-            String FN;
-            boolean forumFound = false;
+            String UN;
+            boolean userFound = false;
             while ((line = br.readLine()) != null) {
-                FN=stringMatchWith(line,"\"\\\"forumName\\\":\\\"(.*?)\\\"\"");
-                if(forumName.equals(FN)) {
+                UN = stringMatchWith(line, "\"\\\"userName\\\":\\\"(.*?)\\\"\"");
+                if(userName.equals(UN)) {
                     sendMessage(line);
-                    forumFound = true;
+                    userFound = true;
                     break;
                 }
             }
-            if(!forumFound) {
-                sendMessage("ForumDidNotfound");
+            if(!userFound) {
+                sendMessage("\"UserDidNotfound\"");
             }
         }catch (Exception e) {
             System.err.println(e.getMessage());
