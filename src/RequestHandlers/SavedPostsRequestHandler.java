@@ -33,8 +33,8 @@ public class SavedPostsRequestHandler extends Thread{
 
     private void sendMessage(String message){
         try {
-            DataOutputStream dos = (DataOutputStream) socket.getOutputStream();
-            dos.write(message.getBytes("UTF-8"));
+            DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+            dos.writeUTF(message);
             dos.close();
         } catch (IOException e) {
             e.printStackTrace();

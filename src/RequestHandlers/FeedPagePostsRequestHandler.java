@@ -4,6 +4,7 @@ import Models.ForumModel;
 import Models.PostModel;
 import Models.UserModel;
 import com.google.gson.Gson;
+import utils.SortByTime;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -11,6 +12,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,9 +42,8 @@ public class FeedPagePostsRequestHandler extends Thread{
 
     private void sendMessage(String message){
         try {
-            DataOutputStream dos = (DataOutputStream) socket.getOutputStream();
-            dos.write(message.getBytes("UTF-8"));
-            dos.close();
+            DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+            dos.writeUTF(message);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -56,7 +57,7 @@ public class FeedPagePostsRequestHandler extends Thread{
             String line;
             boolean userFound = false;
             while ((line = br.readLine()) != null) {
-                String UN=stringMatchWith(line, "\"\\\"userName\\\":\\\"(.*?)\\\"\"");
+                String UN=stringMatchWith(line, "\"userName\":\"(.*?)\"");  // "\"\\\"userName\\\":\\\"(.*?)\\\"\""
                 if(userName.equals(UN)) {
                     sendMessage(line);
                     userFound = true;
@@ -66,14 +67,11 @@ public class FeedPagePostsRequestHandler extends Thread{
             if(!userFound) {
                 sendMessage("UserDidNotfound");
             }
-            else  {
-                String outputForClient = GetPostsForUser(line);
-                DataOutputStream dos = (DataOutputStream) socket.getOutputStream();
-                dos.write(outputForClient.getBytes("UTF-8"));
-                dos.close();
+            else{
+                sendMessage(GetPostsForUser(line));
             }
-        }catch (Exception e) {
-            System.err.println(e.getMessage());
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
     private String GetPostsForUser (String userJson) {
@@ -84,11 +82,9 @@ public class FeedPagePostsRequestHandler extends Thread{
         ArrayList<PostModel> tempForumPosts;
         for(ForumModel forum : userForums) {
             tempForumPosts = forum.getPosts();
-            for (PostModel post : tempForumPosts){
-                postsForClient.add(post);
-            }
+            postsForClient.addAll(tempForumPosts);
         }
-        Collections.sort(postsForClient);
+        Collections.sort(postsForClient, new SortByTime());
         return gson.toJson(postsForClient);
     }
 
