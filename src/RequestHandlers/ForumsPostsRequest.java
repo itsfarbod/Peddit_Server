@@ -3,6 +3,7 @@ package RequestHandlers;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.FileReader;
+import java.io.IOException;
 import java.net.Socket;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,43 +18,48 @@ public class ForumsPostsRequest extends Thread{
         this.socket = socket;
     }
 
-    @Override
-    public void run() {
-        String forumName = null;
-
-        String regex = "#(.*)$";
-
+    private String stringMatchWith(String str, String regex){
         Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(request);
+        Matcher matcher = pattern.matcher(str);
 
         if (matcher.find()) {
-            forumName = matcher.group(1);
+            return matcher.group(1);
         }
+        return null;
+    }
+
+    private String matchWith(String regex){
+        return stringMatchWith(request, regex);
+    }
+
+    private void sendMessage(String message){
+        try {
+            DataOutputStream dos = (DataOutputStream) socket.getOutputStream();
+            dos.write(message.getBytes("UTF-8"));
+            dos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void run() {
+        String forumName = matchWith("#(.*)$");
 
         try (BufferedReader br = new BufferedReader(new FileReader("./DataBase/Forums.txt"))) {
             String line;
             String FN;
-            boolean flag = false;
-            regex = "\"\\\"forumName\\\":\\\"(.*?)\\\"\"";
+            boolean forumFound = false;
             while ((line = br.readLine()) != null) {
-                pattern = Pattern.compile(regex);
-                matcher = pattern.matcher(line);
-                FN = matcher.group(1);
+                FN=stringMatchWith(line,"\"\\\"forumName\\\":\\\"(.*?)\\\"\"");
                 if(forumName.equals(FN)) {
-                    DataOutputStream dos = (DataOutputStream) socket.getOutputStream();
-                    byte[] messageBytes = line.getBytes("UTF-8");
-                    dos.write(messageBytes);
-                    dos.close();
-                    flag = true;
+                    sendMessage(line);
+                    forumFound = true;
                     break;
                 }
             }
-            if(flag == false) {
-                DataOutputStream dos = (DataOutputStream) socket.getOutputStream();
-                String message = "ForumDidNotfound";
-                byte[] messageBytes = message.getBytes("UTF-8");
-                dos.write(messageBytes);
-                dos.close();
+            if(!forumFound) {
+                sendMessage("ForumDidNotfound");
             }
         }catch (Exception e) {
             System.err.println(e.getMessage());
