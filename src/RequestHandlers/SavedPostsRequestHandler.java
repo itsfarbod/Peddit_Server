@@ -50,7 +50,7 @@ public class SavedPostsRequestHandler extends Thread{
             }
             if(flag == false) {
                 DataOutputStream dos = (DataOutputStream) socket.getOutputStream();
-                String message = "UserDidntfound";
+                String message = "UserDidNotfound";
                 byte[] messageBytes = message.getBytes("UTF-8");
                 dos.write(messageBytes);
                 dos.close();
