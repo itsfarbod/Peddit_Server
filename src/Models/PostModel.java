@@ -1,8 +1,11 @@
 package Models;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Locale;
 
-public class PostModel {
+public class PostModel implements Comparable<PostModel>{
     private String title;
     private String desc;
     private UserModel publisher;
@@ -121,5 +124,13 @@ public class PostModel {
                 ", postImage='" + postImage + '\'' +
                 ", commentsCount=" + commentsCount +
                 '}';
+    }
+
+    @Override
+    public int compareTo(PostModel postModel) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH);
+        LocalDate thisDate = LocalDate.parse(this.publishTime.substring(0,19), formatter);
+        LocalDate postModelDate = LocalDate.parse(postModel.publishTime.substring(0,19), formatter);
+        return thisDate.compareTo(postModelDate);
     }
 }
