@@ -3,12 +3,12 @@ package Models;
 import java.util.ArrayList;
 
 public class ForumModel {
+    private String forumName;
     private UserModel owner;
     private ArrayList<UserModel> admins;
     private ArrayList<UserModel> blockedUsers;
     private ArrayList<UserModel> members;
     private ArrayList<PostModel> posts;
-    private String forumName;
     private String forumDesc;
     private String forumCreateTime;
     private String profileImage;

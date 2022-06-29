@@ -45,7 +45,7 @@ public class SignUpRequestHandler extends Thread{
             requestCommand = matcher.group(1);
         }
 
-        regex = "#(.*)";
+        regex = "#(.*)$";
 
         pattern = Pattern.compile(regex);
         matcher = pattern.matcher(request);
