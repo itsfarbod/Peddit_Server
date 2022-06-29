@@ -23,7 +23,7 @@ public class Server {
             try{
                 Socket socket = serverSocket.accept();
                 System.out.println("Connected to client with ip " + socket.getInetAddress().toString());
-                new RequestHandler(socket).run();
+                new MainRequestHandler(socket).run();
             }catch (IOException e) {
                 System.out.println("Failed to connect to client!");
             }
