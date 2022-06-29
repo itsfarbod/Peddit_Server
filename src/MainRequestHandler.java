@@ -1,3 +1,5 @@
+import RequestHandlers.LoginRequestHandler;
+import RequestHandlers.SavedPostsRequestHandler;
 import RequestHandlers.SignUpRequestHandler;
 
 import java.io.DataInputStream;
@@ -73,11 +75,13 @@ public class MainRequestHandler extends Thread{
 
         switch (requestCommand) {
             case "SignUp" :
-                new SignUpRequestHandler(request , socket).run();
+                new SignUpRequestHandler(request , socket).start();
                 break;
             case "LogIn" :
-
+                new LoginRequestHandler(request , socket).start();
                 break;
+            case "SavedPosts" :
+                new SavedPostsRequestHandler(request , socket).start();
         }
     }
 }
