@@ -27,7 +27,7 @@ public class AddPostRequestHandler extends Thread{
         String postJsonString = matcher.group(1);
         PostModel addedPost = gson.fromJson(postJsonString , PostModel.class);
         ForumModel forum = addedPost.getForum();
-        forum.addPost(addedPost);
+//        forum.addPost(addedPost);
         String newForumJsonString = gson.toJson(forum);
         changeForumJsonStringInDataBase(newForumJsonString,findOldForumJasonStringFromDataBase(forum.getForumName()));
     }
