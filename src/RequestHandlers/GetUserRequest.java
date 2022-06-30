@@ -1,29 +1,20 @@
 package RequestHandlers;
 
-import Models.ForumModel;
-import Models.PostModel;
-import Models.UserModel;
-import com.google.gson.Gson;
-import utils.SortByTime;
-
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class FeedPagePostsRequestHandler extends Thread{
+public class GetUserRequest extends Thread{
     String request;
     Socket socket;
 
-    public FeedPagePostsRequestHandler(String request, Socket socket) {
-        this.request = request;
-        this.socket = socket;
+    public GetUserRequest(String request, Socket socket) {
+        this.request=request;
+        this.socket=socket;
     }
 
     private String stringMatchWith(String str, String regex){
@@ -40,24 +31,30 @@ public class FeedPagePostsRequestHandler extends Thread{
         return stringMatchWith(request, regex);
     }
 
+
     private void sendMessage(String message){
         try {
             DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
             dos.writeUTF(message);
+            dos.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+
+
     @Override
     public void run() {
-        String userName = matchWith("@(.*?)/");
+        String userName=matchWith("@(.*?)/");
+        String requestCommand = matchWith("#(.*)$");
 
         try (BufferedReader br = new BufferedReader(new FileReader("./DataBase/Users.txt"))) {
             String line;
+            String UN;
             boolean userFound = false;
             while ((line = br.readLine()) != null) {
-                String UN=stringMatchWith(line, "\"userName\":\"(.*?)\"");  // "\"\\\"userName\\\":\\\"(.*?)\\\"\""
+                UN = stringMatchWith(line, "\"\\\"userName\\\":\\\"(.*?)\\\"\"");
                 if(userName.equals(UN)) {
                     sendMessage(line);
                     userFound = true;
@@ -65,25 +62,10 @@ public class FeedPagePostsRequestHandler extends Thread{
                 }
             }
             if(!userFound) {
-                sendMessage("UserDidNotfound");
+                sendMessage("\"UserDidNotfound\"");
             }
-            else{
-                sendMessage(GetPostsForUser(line));
-            }
-        }catch (Exception e){
-            e.printStackTrace();
+        }catch (Exception e) {
+            System.err.println(e.getMessage());
         }
     }
-    private String GetPostsForUser (String userJson) {
-        Gson gson = new Gson();
-        UserModel userTempModel = gson.fromJson(userJson, UserModel.class);
-        ArrayList<ForumModel> userForums = userTempModel.getFollowedForums();
-        ArrayList<PostModel> postsForClient = new ArrayList<>(0);
-        for(ForumModel forum : userForums) {
-            postsForClient.addAll(forum.getPosts());
-        }
-        postsForClient.sort(new SortByTime());
-        return gson.toJson(postsForClient);
-    }
-
 }

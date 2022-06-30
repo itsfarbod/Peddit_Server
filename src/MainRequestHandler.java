@@ -70,17 +70,16 @@ public class MainRequestHandler extends Thread{
             case "LogIn" :
                 new LoginRequestHandler(request , socket).start();
                 break;
-            case "SavedPosts" :
-                new SavedPostsRequestHandler(request , socket).start();
-                break;
             case "ForumsPosts":
                 new ForumsPostsRequest(request , socket).start();
                 break;
-            case "FeedPagePosts" :
-                new FeedPagePostsRequestHandler(request , socket).start();
-                break;
             case "ForumsList" :
                 new ForumsPostsRequest(request , socket).start();
+                break;
+            case "SavedPosts" :
+            case "FeedPagePosts" :
+            case "GetUser" :
+                new GetUserRequest(request , socket).start();
                 break;
         }
     }
