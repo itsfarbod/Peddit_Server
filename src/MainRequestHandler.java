@@ -26,7 +26,6 @@ public class MainRequestHandler extends Thread{
         } catch (IOException e) {
             System.err.println("Failed to make data output stream for socket : " + socket.toString());
         }
-
     }
 
     private String stringMatchWith(String str, String regex){
@@ -73,54 +72,30 @@ public class MainRequestHandler extends Thread{
             case "ForumsPosts":
                 new ForumsPostsRequest(request , socket).start();
                 break;
-            case "ForumsList" :
-                new ForumsPostsRequest(request , socket).start();
+            case "AllForumsList" :
+                new AllForumsListRequestHandler(request , socket).start();
+                break;
+            case "StarredForumsList" :
+                new StarredForumsListRequestHandler(request , socket).start();
+                break;
+            case "FollowedForumsList" :
+                new FollowedForumsListRequestHandler(request , socket).start();
                 break;
             case "SavedPosts" :
+                new SavedPostsRequestHandler(request , socket).start();
+                break;
             case "FeedPagePosts" :
+                new FeedPagePostsRequestHandler(request , socket).start();
+                break;
             case "GetUser" :
                 new GetUserRequest(request , socket).start();
                 break;
+            case "CreateNewForum" :
+                new CreateNewForumRequestHandler(request , socket).start();
+                break;
+            case "UpdateForums" :
+                new UpdateForumObjectRequest(request , socket).start();
+                break;
         }
-    }
-}
-
-class TestRequestHandler {
-    public static void main(String[] args) {
-        String userName = null;
-        String requestCommand = null;
-        String jsonString = null;
-
-        String regex = "@(.*?)/";
-        String request = "@User1/SignUp#{\"name\":\"Hello\",\"courses\":[{\"name\":\"riazi\"},{\"name\":\"Physiz\"},{\"name\":\"Adabiat\"}]}";
-
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(request);
-
-        if (matcher.find()) {
-            userName = matcher.group(1);
-        }
-
-        regex = "/(.*?)#";
-
-        pattern = Pattern.compile(regex);
-        matcher = pattern.matcher(request);
-
-        if(matcher.find()) {
-            requestCommand = matcher.group(1);
-        }
-
-        regex = "#(.*)";
-
-        pattern = Pattern.compile(regex);
-        matcher = pattern.matcher(request);
-
-        if(matcher.find()) {
-            jsonString = matcher.group(1);
-        }
-
-        System.out.println(userName);
-        System.out.println(requestCommand);
-        System.out.println(jsonString);
     }
 }

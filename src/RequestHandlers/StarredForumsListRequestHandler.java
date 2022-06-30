@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class StarredForumsListRequestHandler extends Thread{
+public class StarredForumsListRequestHandler extends Thread {
     String request;
     Socket socket;
 
@@ -24,8 +24,6 @@ public class StarredForumsListRequestHandler extends Thread{
 
     @Override
     public void run() {
-
-        ForumListModel allStarredForums = new ForumListModel();
 
         String userName = null;
 
@@ -48,24 +46,64 @@ public class StarredForumsListRequestHandler extends Thread{
                 pattern = Pattern.compile(regex);
                 matcher = pattern.matcher(line);
                 UN = matcher.group(1);
-                if(userName.equals(UN)) {
-                    UserModel um = gson.fromJson(line.trim() , UserModel.class);
-                    allStarredForums.setForums(um.getStarredForums());
+                if (userName.equals(UN)) {
+
+//                    UserModel um = gson.fromJson(line.trim() , UserModel.class);
+//                    allStarredForums.setForums(gson.fromJson(getForumsForUser(line.trim())));
                     DataOutputStream dos = (DataOutputStream) socket.getOutputStream();
-                    dos.write(gson.toJson(allStarredForums).getBytes());
+                    dos.write(gson.toJson(getForumsForUser(line.trim())).getBytes());
                     flag = true;
                     break;
                 }
             }
-            if(flag == false) {
+            if (flag == false) {
                 DataOutputStream dos = (DataOutputStream) socket.getOutputStream();
                 String message = "UserDidNotfound";
                 byte[] messageBytes = message.getBytes("UTF-8");
                 dos.write(messageBytes);
                 dos.close();
             }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    private ForumListModel getForumsForUser(String userJson) {
+        Gson gson = new Gson();
+        UserModel userTempModel = gson.fromJson(userJson, UserModel.class);
+        ArrayList<ForumModel> userFollowedForums = userTempModel.getStarredForums();
+        ArrayList<String> userForumsNames = new ArrayList<>(0);
+        for (ForumModel forum : userFollowedForums) {
+            userForumsNames.add(forum.getForumName());
+        }
+        userFollowedForums = new ArrayList<>(0);
+        for (String FN : userForumsNames) {
+            userFollowedForums.add(getForumObjectFromJsonString(FN));
+        }
+        ForumListModel forumListObj = new ForumListModel();
+        forumListObj.setForums(userFollowedForums);
+        return forumListObj;
+    }
+
+    private ForumModel getForumObjectFromJsonString(String forumName) {
+        Gson gson = new Gson();
+        Pattern pattern;
+        Matcher matcher;
+        try (BufferedReader br = new BufferedReader(new FileReader("./DataBase/Forums.txt"))) {
+            String line;
+            String FN;
+            String regex = "\"\\\"forumName\\\":\\\"(.*?)\\\"\"";
+            while ((line = br.readLine()) != null) {
+                pattern = Pattern.compile(regex);
+                matcher = pattern.matcher(line);
+                FN = matcher.group(1);
+                if(forumName.equals(FN)) {
+                    return gson.fromJson(line.trim() , ForumModel.class);
+                }
+            }
         }catch (Exception e) {
             System.err.println(e.getMessage());
         }
+        return null;
     }
 }
