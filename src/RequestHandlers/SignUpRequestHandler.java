@@ -47,7 +47,6 @@ public class SignUpRequestHandler extends Thread{
     @Override
     public void run() {
         String userName = matchWith("@(.*?)/");
-        String requestCommand = matchWith("/(.*?)#");
         String jsonString = matchWith("#(.*)$");
 
         try (BufferedReader br = new BufferedReader(new FileReader("./DataBase/UserPass.txt"))) {
