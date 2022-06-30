@@ -59,7 +59,7 @@ public class FeedPagePostsRequestHandler extends Thread{
             while ((line = br.readLine()) != null) {
                 String UN=stringMatchWith(line, "\"userName\":\"(.*?)\"");  // "\"\\\"userName\\\":\\\"(.*?)\\\"\""
                 if(userName.equals(UN)) {
-                    sendMessage(line);
+//                    sendMessage(line);
                     userFound = true;
                     break;
                 }
@@ -78,6 +78,14 @@ public class FeedPagePostsRequestHandler extends Thread{
         Gson gson = new Gson();
         UserModel userTempModel = gson.fromJson(userJson, UserModel.class);
         ArrayList<ForumModel> userForums = userTempModel.getFollowedForums();
+        ArrayList<String> userForumsNames = new ArrayList<>(0);
+        for(ForumModel forum : userForums) {
+            userForumsNames.add(forum.getForumName());
+        }
+        userForums = new ArrayList<>(0);
+        for (String FN : userForumsNames) {
+            userForums.add(getForumObjectFromJsonString(FN));
+        }
         ArrayList<PostModel> postsForClient = new ArrayList<>(0);
         for(ForumModel forum : userForums) {
             postsForClient.addAll(forum.getPosts());
@@ -86,4 +94,26 @@ public class FeedPagePostsRequestHandler extends Thread{
         return gson.toJson(postsForClient);
     }
 
+
+    private ForumModel getForumObjectFromJsonString(String forumName) {
+        Gson gson = new Gson();
+        Pattern pattern;
+        Matcher matcher;
+        try (BufferedReader br = new BufferedReader(new FileReader("./DataBase/Forums.txt"))) {
+            String line;
+            String FN;
+            String regex = "\"\\\"forumName\\\":\\\"(.*?)\\\"\"";
+            while ((line = br.readLine()) != null) {
+                pattern = Pattern.compile(regex);
+                matcher = pattern.matcher(line);
+                FN = matcher.group(1);
+                if(forumName.equals(FN)) {
+                    return gson.fromJson(line.trim() , ForumModel.class);
+                }
+            }
+        }catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+        return null;
+    }
 }

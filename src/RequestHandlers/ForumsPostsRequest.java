@@ -53,7 +53,7 @@ public class ForumsPostsRequest extends Thread{
             while ((line = br.readLine()) != null) {
                 FN=stringMatchWith(line,"\"\\\"forumName\\\":\\\"(.*?)\\\"\"");
                 if(forumName.equals(FN)) {
-                    sendMessage(line);
+                    sendMessage(line.trim());
                     forumFound = true;
                     break;
                 }

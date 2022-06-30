@@ -56,7 +56,7 @@ public class GetUserRequest extends Thread{
             while ((line = br.readLine()) != null) {
                 UN = stringMatchWith(line, "\"\\\"userName\\\":\\\"(.*?)\\\"\"");
                 if(userName.equals(UN)) {
-                    sendMessage(line);
+                    sendMessage(line.trim());
                     userFound = true;
                     break;
                 }

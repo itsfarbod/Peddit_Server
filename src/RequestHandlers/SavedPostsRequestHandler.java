@@ -53,7 +53,7 @@ public class SavedPostsRequestHandler extends Thread{
                 UN=stringMatchWith(line, "\"\\\"userName\\\":\\\"(.*?)\\\"\"");
                 if(userName.equals(UN)) {
                     DataOutputStream dos = (DataOutputStream) socket.getOutputStream();
-                    byte[] messageBytes = line.getBytes("UTF-8");
+                    byte[] messageBytes = line.trim().getBytes("UTF-8");
                     dos.write(messageBytes);
                     dos.close();
                     userFound = true;

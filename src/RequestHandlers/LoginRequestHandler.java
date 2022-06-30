@@ -69,7 +69,7 @@ public class LoginRequestHandler extends Thread{
                         while ((line = br.readLine()) != null) {
                             String userNameTemp=stringMatchWith(line, "\"\\\"userName\\\":\\\"(.*?)\\\"\"");
                             if(userNameTemp.equals(userName)){
-                                sendMessage(line);
+                                sendMessage(line.trim());
                                 break;
                             }
                         }

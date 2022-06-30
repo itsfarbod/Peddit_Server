@@ -30,7 +30,7 @@ public class AllForumsListRequestHandler extends Thread{
             String line;
             Gson gson = new Gson();
             while ((line = br.readLine()) != null) {
-                allForumsList.add(gson.fromJson(line , ForumModel.class));
+                allForumsList.add(gson.fromJson(line.trim() , ForumModel.class));
             }
             allForums.setForums(allForumsList);
             DataOutputStream dos = (DataOutputStream) socket.getOutputStream();

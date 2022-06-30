@@ -25,7 +25,7 @@ public class AddPostRequestHandler extends Thread{
         Pattern pattern = Pattern.compile("#(.*)$");
         Matcher matcher = pattern.matcher(request);
         String postJsonString = matcher.group(1);
-        PostModel addedPost = gson.fromJson(postJsonString , PostModel.class);
+        PostModel addedPost = gson.fromJson(postJsonString.trim() , PostModel.class);
         ForumModel forum = addedPost.getForum();
 //        forum.addPost(addedPost);
         String newForumJsonString = gson.toJson(forum);
@@ -44,6 +44,7 @@ public class AddPostRequestHandler extends Thread{
             while((currentLine = reader.readLine()) != null) {
                 if(currentLine.equals(oldForumJsonString)){
                     writer.write(newForumJsonString);
+                    writer.write('\n');
                 }
                 else {
                     writer.write(currentLine);
@@ -62,7 +63,7 @@ public class AddPostRequestHandler extends Thread{
     private String findOldForumJasonStringFromDataBase(String forumName) {
         Pattern pattern;
         Matcher matcher;
-        try (BufferedReader br = new BufferedReader(new FileReader("./DataBase/Users.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("./DataBase/Forums.txt"))) {
             String line;
             String FN;
             String regex = "\"\\\"forumName\\\":\\\"(.*?)\\\"\"";

@@ -49,7 +49,7 @@ public class FollowedForumsListRequestHandler extends Thread{
                 matcher = pattern.matcher(line);
                 UN = matcher.group(1);
                 if(userName.equals(UN)) {
-                    UserModel um = gson.fromJson(line , UserModel.class);
+                    UserModel um = gson.fromJson(line.trim() , UserModel.class);
                     allFollowedForums.setForums(um.getFollowedForums());
                     DataOutputStream dos = (DataOutputStream) socket.getOutputStream();
                     dos.write(gson.toJson(allFollowedForums).getBytes());
