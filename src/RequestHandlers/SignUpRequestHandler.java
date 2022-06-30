@@ -55,7 +55,7 @@ public class SignUpRequestHandler extends Thread{
             String UN;
             boolean signedUpBefore = false;
             while ((line = br.readLine()) != null) {
-                UN=stringMatchWith(line, "^(.*?) :");
+                UN=stringMatchWith(line.trim(), "^(.*?) :");
                 if(userName.equals(UN)) {
                     sendMessage("DuplicateUsername");
                     signedUpBefore = true;
@@ -63,14 +63,17 @@ public class SignUpRequestHandler extends Thread{
                 }
             }
             if(!signedUpBefore) {
+                Gson gson = new Gson();
+                UserModel user = gson.fromJson(jsonString.trim() , UserModel.class);
                 FileWriter fw = new FileWriter( "./DataBase/Users.txt",true);
                 fw.write(jsonString);
                 fw.write('\n');
                 MessageDigest digest = MessageDigest.getInstance("SHA-256");
-                byte[] hash = digest.digest(stringMatchWith(jsonString, "\"\\\"password\\\":\\\"(.*?)\\\"\"").getBytes(StandardCharsets.UTF_8));
+                byte[] hash = digest.digest(user.getPassword().getBytes());
                 String passwordHash = new String(hash, StandardCharsets.UTF_8);
                 fw = new FileWriter("./DataBase/UserPass.txt" , true);
                 fw.write(userName + " : " + passwordHash + "\n");
+                fw.flush();
                 DataOutputStream dos = (DataOutputStream) socket.getOutputStream();
                 sendMessage("Account Created Successfully");
             }
