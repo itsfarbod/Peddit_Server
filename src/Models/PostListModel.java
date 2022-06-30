@@ -2,10 +2,10 @@ package Models;
 
 import java.util.ArrayList;
 
-public class FeedPagePostModel{
+public class PostListModel {
     private ArrayList<PostModel> posts;
 
-    public FeedPagePostModel(ArrayList<PostModel> posts) {
+    public PostListModel(ArrayList<PostModel> posts) {
         this.posts = posts;
     }
 

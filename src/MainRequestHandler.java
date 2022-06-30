@@ -78,6 +78,10 @@ public class MainRequestHandler extends Thread{
                 break;
             case "FeedPagePosts" :
                 new FeedPagePostsRequestHandler(request , socket).start();
+                break;
+            case "ForumsList" :
+                new ForumsPostsRequest(request , socket).start();
+                break;
         }
     }
 }

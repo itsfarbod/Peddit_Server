@@ -59,6 +59,7 @@ public class FeedPagePostsRequestHandler extends Thread{
             while ((line = br.readLine()) != null) {
                 String UN=stringMatchWith(line, "\"userName\":\"(.*?)\"");  // "\"\\\"userName\\\":\\\"(.*?)\\\"\""
                 if(userName.equals(UN)) {
+                    System.out.println(line);
                     sendMessage(line);
                     userFound = true;
                     break;
