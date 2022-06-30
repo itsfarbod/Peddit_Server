@@ -107,6 +107,10 @@ public class ForumModel {
         this.headerImage = headerImage;
     }
 
+    public void addPost(PostModel post) {
+        this.posts.add(post);
+    }
+
     @Override
     public String toString() {
         return "ForumModel{" +

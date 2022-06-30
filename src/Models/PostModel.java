@@ -110,6 +110,7 @@ public class PostModel implements Comparable<PostModel>{
         this.commentsCount = commentsCount;
     }
 
+
     @Override
     public String toString() {
         return "PostModel{" +
