@@ -68,6 +68,7 @@ public class SignUpRequestHandler extends Thread{
                 FileWriter fw = new FileWriter( "./DataBase/Users.txt",true);
                 fw.write(jsonString);
                 fw.write('\n');
+                fw.flush();
                 MessageDigest digest = MessageDigest.getInstance("SHA-256");
                 byte[] hash = digest.digest(user.getPassword().getBytes());
                 String passwordHash = new String(hash, StandardCharsets.UTF_8);
