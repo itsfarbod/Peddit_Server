@@ -17,11 +17,24 @@ public class DatasUpdateRequestHandler extends Thread{
         this.socket = socket;
     }
 
+    private String stringMatchWith(String str, String regex){
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(str);
+
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null;
+    }
+
+    private String matchWith(String regex){
+        return stringMatchWith(request, regex);
+    }
+
     @Override
     public void run() {
-        Pattern pattern = Pattern.compile("#(.*)$");
-        Matcher matcher = pattern.matcher(request);
-        String newDatasJsonString = matcher.group(1);
+        String newDatasJsonString = matchWith("#(.*)$");
+        System.out.println(newDatasJsonString);
         try {
             FileWriter fw = new FileWriter( "src/DataBase/Datas.txt",false);
             fw.write(newDatasJsonString.trim());
@@ -29,7 +42,7 @@ public class DatasUpdateRequestHandler extends Thread{
             fw.close();
             DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
             dos.write("DatasUpdated".getBytes());
-            System.out.print("Datas Updated!");
+            System.out.println("Datas Updated!");
             dos.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
