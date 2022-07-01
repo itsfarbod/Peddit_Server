@@ -4,3 +4,6 @@
 {"userName":"asdasdasdsadasd","email":"shayan@gmaui.com","password":"asdasdasdas123S","followedForums":[],"commentsCount":0,"userPostsCount":0,"savedPosts":[],"starredForums":[],"userProfileImage":""}
 {"userName":"asdfasdfasdf","email":"sdaasd@gmail.com","password":"adfasdD123","followedForums":[],"commentsCount":0,"userPostsCount":0,"savedPosts":[],"starredForums":[],"userProfileImage":""}
 {"userName":"test","email":"test@gmail.com","password":"Test231D","followedForums":[],"commentsCount":0,"userPostsCount":0,"savedPosts":[],"starredForums":[],"userProfileImage":""}
+{"userName":"shayan","email":"shayan@shayan.com","password":"Shayan123","followedForums":[],"commentsCount":0,"userPostsCount":0,"savedPosts":[],"starredForums":[],"userProfileImage":""}
+{"userName":"farbod","email":"farbod@gmail.com","password":"Farbod123","followedForums":[],"commentsCount":0,"userPostsCount":0,"savedPosts":[],"starredForums":[],"userProfileImage":""}
+{"userName":"newUser","email":"email@gmail.com","password":"Password1","followedForums":[],"commentsCount":0,"userPostsCount":0,"savedPosts":[],"starredForums":[],"userProfileImage":""}

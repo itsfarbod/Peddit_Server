@@ -27,8 +27,9 @@ public class DatasUpdateRequestHandler extends Thread{
             fw.write(newDatasJsonString.trim());
             fw.flush();
             fw.close();
-            DataOutputStream dos = (DataOutputStream) socket.getOutputStream();
+            DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
             dos.write("DatasUpdated".getBytes());
+            System.out.print("Datas Updated!");
             dos.close();
         } catch (IOException e) {
             throw new RuntimeException(e);

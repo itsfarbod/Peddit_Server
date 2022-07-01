@@ -1,10 +1,12 @@
 package RequestHandlers;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
+import Models.DatasModel;
+import java.io.*;
 import java.net.Socket;
+
+import Models.ForumModel;
+import com.google.gson.Gson;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,12 +24,19 @@ public class SendDatasRequestHandler extends Thread{
         try (BufferedReader br = new BufferedReader(new FileReader("src/DataBase/Datas.txt"))) {
             String message;
             String DatasJson = br.readLine();
+
             if(DatasJson != null) {
                 message = DatasJson.trim();
             } else {
-                message = "DatasNotFound";
+                Gson gson = new Gson();
+                message = gson.toJson(new DatasModel(new ArrayList<ForumModel>(0)),DatasModel.class);
+                FileWriter fw = new FileWriter( "src/DataBase/Datas.txt",false);
+                fw.write(message);
+                System.out.println("datas sent!");
+                fw.flush();
+                fw.close();
             }
-            DataOutputStream dos = (DataOutputStream) socket.getOutputStream();
+            DataOutputStream dos =  new DataOutputStream(socket.getOutputStream());
             dos.write(message.getBytes());
         } catch (IOException e) {
             throw new RuntimeException(e);

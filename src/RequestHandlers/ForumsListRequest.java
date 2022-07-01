@@ -50,6 +50,8 @@ public class ForumsListRequest extends Thread{
         String userName=matchWith("@(.*?)/");
         String requestCommand = matchWith("#(.*)$");
 
+        System.out.println(userName);
+
         try (BufferedReader br = new BufferedReader(new FileReader("src/DataBase/Users.txt"))) {
             String line;
             String UN;

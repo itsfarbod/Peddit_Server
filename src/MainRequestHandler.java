@@ -61,7 +61,7 @@ public class MainRequestHandler extends Thread{
 //        String userName;
         String requestCommand = stringMatchWith(request, "/(.*?)#");
         String jsonString = stringMatchWith(request, "#(.*)");
-
+        System.out.println(request);
         switch (requestCommand) {
             case "SignUp" :
                 new SignUpRequestHandler(request , socket).start();
@@ -95,6 +95,12 @@ public class MainRequestHandler extends Thread{
                 break;
             case "UpdateForums" :
                 new UpdateForumObjectRequest(request , socket).start();
+                break;
+            case "GetDatas" :
+                new SendDatasRequestHandler(request , socket).start();
+                break;
+            case "SendDatas" :
+                new DatasUpdateRequestHandler(request , socket).start();
                 break;
         }
     }

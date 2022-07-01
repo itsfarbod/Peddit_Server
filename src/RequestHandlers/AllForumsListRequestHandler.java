@@ -33,13 +33,13 @@ public class AllForumsListRequestHandler extends Thread{
                 allForumsList.add(gson.fromJson(line.trim() , ForumModel.class));
             }
             allForums.setForums(allForumsList);
-            DataOutputStream dos = (DataOutputStream) socket.getOutputStream();
+            DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
 
             dos.write(gson.toJson(allForums).getBytes());
             dos.close();
 
         }catch (Exception e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 }
