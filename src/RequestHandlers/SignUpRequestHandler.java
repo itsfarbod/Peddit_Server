@@ -37,7 +37,7 @@ public class SignUpRequestHandler extends Thread{
     private void sendMessage(String message){
         try {
             DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-            dos.writeUTF(message);
+            dos.write(message.getBytes());
             dos.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -48,8 +48,6 @@ public class SignUpRequestHandler extends Thread{
     public void run() {
         String userName = matchWith("@(.*?)/");
         String jsonString = matchWith("#(.*)$");
-        System.out.println(jsonString);
-
         try (BufferedReader br = new BufferedReader(new FileReader("src/DataBase/UserPass.txt"))) {
             String line;
             String UN;
@@ -73,7 +71,6 @@ public class SignUpRequestHandler extends Thread{
                 String passwordField;
                 fw = new FileWriter("src/DataBase/UserPass.txt" , true);
                 passwordField = user.getUserName() + " : " + user.getPassword() + "\n";
-                System.out.println(user.getPassword());
                 fw.write(passwordField);
                 fw.flush();
                 sendMessage("Account Created Successfully");
