@@ -36,7 +36,7 @@ public class ForumsListRequest extends Thread{
     private void sendMessage(String message){
         try {
             DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-            dos.writeUTF(message);
+            dos.write(message.getBytes());
             dos.close();
         } catch (IOException e) {
             e.printStackTrace();

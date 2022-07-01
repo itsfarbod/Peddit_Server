@@ -48,15 +48,14 @@ public class LoginRequestHandler extends Thread{
     @Override
     public void run() {
         String userName = matchWith("@(.*?)/");
-        String password = matchWith("#(.*)\"");
-
+        String password = matchWith("#(.*)");
         try (BufferedReader br = new BufferedReader(new FileReader("src/DataBase/UserPass.txt"))) {
             String line;
             boolean userFound = false;
             while ((line = br.readLine()) != null) {
                 String passwordsTemp = stringMatchWith(line, ": (.*?)$");
                 if (password.trim().equals(passwordsTemp.trim())) {
-                    sendMessage("UserFound");
+                    sendMessage("CanLogin");
 //                        while ((line = nbr.readLine()) != null) {
 //                            String userNameTemp=stringMatchWith(line, "\"\\\"userName\\\":\\\"(.*?)\\\"\"");
 //                            if(userNameTemp.equals(userName)){
@@ -71,7 +70,7 @@ public class LoginRequestHandler extends Thread{
                 }
             }
             if(userFound == false) {
-                sendMessage("UserDidNotFound");
+                sendMessage("CanNotLogin");
             }
         }catch (IOException e){}
     }

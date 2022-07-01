@@ -43,7 +43,7 @@ public class FeedPagePostsRequestHandler extends Thread{
     private void sendMessage(String message){
         try {
             DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-            dos.writeUTF(message);
+            dos.write(message.getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -35,7 +35,7 @@ public class GetUserRequest extends Thread{
     private void sendMessage(String message){
         try {
             DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-            dos.writeUTF(message);
+            dos.write(message.getBytes());
             dos.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -54,7 +54,7 @@ public class GetUserRequest extends Thread{
             String UN;
             boolean userFound = false;
             while ((line = br.readLine()) != null) {
-                UN = stringMatchWith(line, "\"\\\"userName\\\":\\\"(.*?)\\\"\"");
+                UN = stringMatchWith(line, "\\\"userName\\\":\\\"(.*?)\\\"");
                 if(userName.equals(UN)) {
                     sendMessage(line.trim());
                     userFound = true;
@@ -62,7 +62,7 @@ public class GetUserRequest extends Thread{
                 }
             }
             if(!userFound) {
-                sendMessage("\"UserDidNotfound\"");
+                sendMessage("UserDidNotfound");
             }
         }catch (Exception e) {
             System.err.println(e.getMessage());
