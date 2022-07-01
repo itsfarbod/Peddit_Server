@@ -48,8 +48,9 @@ public class SignUpRequestHandler extends Thread{
     public void run() {
         String userName = matchWith("@(.*?)/");
         String jsonString = matchWith("#(.*)$");
+        System.out.println(jsonString);
 
-        try (BufferedReader br = new BufferedReader(new FileReader("./DataBase/UserPass.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/DataBase/UserPass.txt"))) {
             String line;
             String UN;
             boolean signedUpBefore = false;
@@ -64,23 +65,21 @@ public class SignUpRequestHandler extends Thread{
             if(!signedUpBefore) {
                 Gson gson = new Gson();
                 UserModel user = gson.fromJson(jsonString.trim() , UserModel.class);
-                FileWriter fw = new FileWriter( "./DataBase/Users.txt",true);
+                FileWriter fw = new FileWriter( "src/DataBase/Users.txt",true);
                 fw.write(jsonString);
                 fw.write('\n');
                 fw.flush();
-                MessageDigest digest = MessageDigest.getInstance("SHA-256");
-                byte[] hash = digest.digest(user.getPassword().getBytes());
-                String passwordHash = new String(hash, StandardCharsets.UTF_8);
-                fw = new FileWriter("./DataBase/UserPass.txt" , true);
-                fw.write(userName + " : " + passwordHash + "\n");
+                fw.close();
+                String passwordField;
+                fw = new FileWriter("src/DataBase/UserPass.txt" , true);
+                passwordField = user.getUserName() + " : " + user.getPassword() + "\n";
+                System.out.println(user.getPassword());
+                fw.write(passwordField);
                 fw.flush();
-                DataOutputStream dos = (DataOutputStream) socket.getOutputStream();
                 sendMessage("Account Created Successfully");
             }
         } catch (IOException e) {
             System.out.println("Reading file interrupted");
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
         }
     }
 }

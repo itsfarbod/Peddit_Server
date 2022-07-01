@@ -53,7 +53,7 @@ public class FeedPagePostsRequestHandler extends Thread{
     public void run() {
         String userName = matchWith("@(.*?)/");
 
-        try (BufferedReader br = new BufferedReader(new FileReader("./DataBase/Users.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/DataBase/Users.txt"))) {
             String line;
             boolean userFound = false;
             while ((line = br.readLine()) != null) {
@@ -99,7 +99,7 @@ public class FeedPagePostsRequestHandler extends Thread{
         Gson gson = new Gson();
         Pattern pattern;
         Matcher matcher;
-        try (BufferedReader br = new BufferedReader(new FileReader("./DataBase/Forums.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/DataBase/Forums.txt"))) {
             String line;
             String FN;
             String regex = "\"\\\"forumName\\\":\\\"(.*?)\\\"\"";

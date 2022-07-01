@@ -49,7 +49,7 @@ public class GetUserRequest extends Thread{
         String userName=matchWith("@(.*?)/");
         String requestCommand = matchWith("#(.*)$");
 
-        try (BufferedReader br = new BufferedReader(new FileReader("./DataBase/Users.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/DataBase/Users.txt"))) {
             String line;
             String UN;
             boolean userFound = false;

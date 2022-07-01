@@ -46,7 +46,7 @@ public class ForumsPostsRequest extends Thread{
     public void run() {
         String forumName = matchWith("#(.*)$");
 
-        try (BufferedReader br = new BufferedReader(new FileReader("./DataBase/Forums.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/DataBase/Forums.txt"))) {
             String line;
             String FN;
             boolean forumFound = false;

@@ -45,7 +45,7 @@ public class SavedPostsRequestHandler extends Thread{
     public void run() {
         String userName = matchWith("@(.*?)/");
 
-        try (BufferedReader br = new BufferedReader(new FileReader("./DataBase/Users.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/DataBase/Users.txt"))) {
             String line;
             String UN;
             boolean userFound = false;

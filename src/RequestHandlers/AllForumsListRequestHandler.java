@@ -26,7 +26,7 @@ public class AllForumsListRequestHandler extends Thread{
         ForumListModel allForums = new ForumListModel();
         ArrayList<ForumModel> allForumsList = new ArrayList<>(0);
 
-        try (BufferedReader br = new BufferedReader(new FileReader("./DataBase/Forums.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/DataBase/Forums.txt"))) {
             String line;
             Gson gson = new Gson();
             while ((line = br.readLine()) != null) {
@@ -37,7 +37,6 @@ public class AllForumsListRequestHandler extends Thread{
 
             dos.write(gson.toJson(allForums).getBytes());
             dos.close();
-
 
         }catch (Exception e) {
             System.err.println(e.getMessage());

@@ -24,7 +24,7 @@ public class CreateNewForumRequestHandler extends Thread{
         Matcher matcher = pattern.matcher(request);
         String newForumJsonString = matcher.group(1);
         ForumModel newForumModel = gson.fromJson(newForumJsonString.trim() , ForumModel.class);
-        try (BufferedReader br = new BufferedReader(new FileReader("./DataBase/Forums.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/DataBase/Forums.txt"))) {
             String line;
             String FN;
             String regex = "\"\\\"forumName\\\":\\\"(.*?)\\\"\"";
@@ -39,7 +39,7 @@ public class CreateNewForumRequestHandler extends Thread{
                     return;
                 }
             }
-            FileWriter fw = new FileWriter( "./DataBase/Forums.txt",true);
+            FileWriter fw = new FileWriter( "src/DataBase/Forums.txt",true);
             fw.write(newForumJsonString);
             fw.write('\n');
             fw.flush();

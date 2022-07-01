@@ -36,7 +36,7 @@ public class FollowedForumsListRequestHandler extends Thread{
             userName = matcher.group(1);
         }
 
-        try (BufferedReader br = new BufferedReader(new FileReader("./DataBase/Users.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/DataBase/Users.txt"))) {
             String line;
             String UN;
             Gson gson = new Gson();
@@ -89,7 +89,7 @@ public class FollowedForumsListRequestHandler extends Thread{
         Gson gson = new Gson();
         Pattern pattern;
         Matcher matcher;
-        try (BufferedReader br = new BufferedReader(new FileReader("./DataBase/Forums.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/DataBase/Forums.txt"))) {
             String line;
             String FN;
             String regex = "\"\\\"forumName\\\":\\\"(.*?)\\\"\"";

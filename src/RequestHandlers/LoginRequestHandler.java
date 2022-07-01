@@ -59,13 +59,13 @@ public class LoginRequestHandler extends Thread{
         byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
         String passwordHash = new String(hash, StandardCharsets.UTF_8);
 
-        try (BufferedReader br = new BufferedReader(new FileReader("./DataBase/UserPass.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/DataBase/UserPass.txt"))) {
             String line;
             boolean userFound = false;
             while ((line = br.readLine()) != null) {
                 String passwrodHashesTemp = stringMatchWith(line, ": (.*?)$");
                 if (passwordHash.equals(passwrodHashesTemp)) {
-                    try(BufferedReader nbr = new BufferedReader(new FileReader("./DataBase/Users.txt"))) {
+                    try(BufferedReader nbr = new BufferedReader(new FileReader("src/DataBase/Users.txt"))) {
                         while ((line = br.readLine()) != null) {
                             String userNameTemp=stringMatchWith(line, "\"\\\"userName\\\":\\\"(.*?)\\\"\"");
                             if(userNameTemp.equals(userName)){

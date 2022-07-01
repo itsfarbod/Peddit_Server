@@ -35,8 +35,8 @@ public class UpdateForumObjectRequest extends Thread{
     }
 
     private void changeForumJsonStringInDataBase(String newForumJsonString , String oldForumJsonString) {
-        File inputFile = new File("./DataBase/Forums.txt");
-        File tempFile = new File("./DataBase/TempForumFile.txt");
+        File inputFile = new File("src/DataBase/Forums.txt");
+        File tempFile = new File("src/DataBase/TempForumFile.txt");
 
         String currentLine;
 
@@ -66,7 +66,7 @@ public class UpdateForumObjectRequest extends Thread{
     private String findOldForumJasonStringFromDataBase(String forumName) {
         Pattern pattern;
         Matcher matcher;
-        try (BufferedReader br = new BufferedReader(new FileReader("./DataBase/Forums.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/DataBase/Forums.txt"))) {
             String line;
             String FN;
             String regex = "\"\\\"forumName\\\":\\\"(.*?)\\\"\"";
