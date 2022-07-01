@@ -1,3 +1,5 @@
 {"userName":"username","email":"email@site.com","password":"Aaaa1234","followedForums":[],"commentsCount":0,"userPostsCount":0,"savedPosts":[],"starredForums":[],"userProfileImage":""}
 {"userName":"username","email":"email@site.com","password":"Aaaa1234","followedForums":[],"commentsCount":0,"userPostsCount":0,"savedPosts":[],"starredForums":[],"userProfileImage":""}
-{"userName":"username","email":"email@site.com","password":"Aaaa1234","followedForums":[],"commentsCount":0,"userPostsCount":0,"savedPosts":[],"starredForums":[],"userProfileImage":""}
+{userName: "sadasd", email: "asdsada@asdasd.com", password: "Abcd1234", followedForums: [], commentsCount: 0, userPostsCount: 0, savedPosts: [], starredForums: [], userProfileImage: ""}
+{userName: "asdsa", email: "dasdas@das.com", password: "Abcd1234", followedForums: [], commentsCount: 0, userPostsCount: 0, savedPosts: [], starredForums: [], userProfileImage: ""}
+{userName: "asdsa", email: "dasdas@das.com", password: "Abcd1234", followedForums: [], commentsCount: 0, userPostsCount: 0, savedPosts: [], starredForums: [], userProfileImage: ""}

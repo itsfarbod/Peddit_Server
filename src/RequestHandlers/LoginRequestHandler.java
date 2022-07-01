@@ -50,36 +50,28 @@ public class LoginRequestHandler extends Thread{
         String userName = matchWith("@(.*?)/");
         String password = matchWith("#(.*)\"");
 
-        MessageDigest digest = null;
-        try {
-            digest = MessageDigest.getInstance("SHA-256");
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-        byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
-        String passwordHash = new String(hash, StandardCharsets.UTF_8);
-
         try (BufferedReader br = new BufferedReader(new FileReader("src/DataBase/UserPass.txt"))) {
             String line;
             boolean userFound = false;
             while ((line = br.readLine()) != null) {
-                String passwrodHashesTemp = stringMatchWith(line, ": (.*?)$");
-                if (passwordHash.equals(passwrodHashesTemp)) {
-                    try(BufferedReader nbr = new BufferedReader(new FileReader("src/DataBase/Users.txt"))) {
-                        while ((line = br.readLine()) != null) {
-                            String userNameTemp=stringMatchWith(line, "\"\\\"userName\\\":\\\"(.*?)\\\"\"");
-                            if(userNameTemp.equals(userName)){
-                                sendMessage(line.trim());
-                                break;
-                            }
-                        }
-                    }catch (IOException e) {}
+                String passwordsTemp = stringMatchWith(line, ": (.*?)$");
+                if (password.trim().equals(passwordsTemp.trim())) {
+                    sendMessage("UserFound");
+//                        while ((line = nbr.readLine()) != null) {
+//                            String userNameTemp=stringMatchWith(line, "\"\\\"userName\\\":\\\"(.*?)\\\"\"");
+//                            if(userNameTemp.equals(userName)){
+//                                sendMessage(line.trim());
+//                                break;
+//                            }
+//                        }
+//                    }catch (IOException e) {}
+//                    try(BufferedReader nbr = new BufferedReader(new FileReader("src/DataBase/Users.txt"))) {
                     userFound = true;
                     break;
                 }
             }
             if(userFound == false) {
-                sendMessage("User did not found");
+                sendMessage("UserDidNotFound");
             }
         }catch (IOException e){}
     }
